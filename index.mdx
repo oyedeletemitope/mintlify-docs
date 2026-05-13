@@ -1,133 +1,41 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
-icon: 'star'
+title: "Overview"
+description: "A documentation site covering the GitHub REST API and a Node.js email tutorial, built for the Documentation Assessment Course."
 ---
 
-## Setting up
+# Documentation Assessment - Day 10
 
-Get your documentation site up and running in minutes.
+This site was built as part of the Documentation Assessment Course using Mintlify. It brings together two deliverables from earlier in the course: the GitHub REST API reference from Day 7 and the Resend email tutorial from Day 9.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+## What is in this site
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Tutorial" icon="book-open" href="/tutorial-resend">
+    A step-by-step guide to sending your first email with the Resend API in Node.js. Includes prerequisites, numbered steps, expected output, and a troubleshooting section.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Reference documentation for three GitHub REST API endpoints: Get a user, List repository issues, and Get a repository.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## Quick reference
 
-Everything you need to create world-class documentation.
+| Task | Where to look |
+|---|---|
+| Send your first email with Resend | [Tutorial](/tutorial-resend) |
+| Fix a 401 or 422 error in the tutorial | [Troubleshooting](/tutorial-resend#troubleshooting) |
+| Get a GitHub user profile | [Endpoint 1](/api-reference#endpoint-1-get-a-user) |
+| List issues in a repository | [Endpoint 2](/api-reference#endpoint-2-list-repository-issues) |
+| Fetch repository metadata | [Endpoint 3](/api-reference#endpoint-3-get-a-repository) |
+| Understand GitHub API authentication | [Authentication](/api-reference#authentication) |
+| Look up an error code | [API Reference](/api-reference) |
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## About this site
 
-## Make your content agent ready
+This site was built using [Mintlify](https://mintlify.com). The source files are plain MDX, version-controlled on GitHub, and linted with Vale on every push via GitHub Actions.
 
-Make your docs work for humans and AI agents alike.
-
-<Columns cols={2}>
-  <Card
-    title="Prompt component"
-    icon="robot"
-    href="/agent-ready/prompt"
-  >
-    Embed shareable AI prompts readers can copy or open in Cursor.
-  </Card>
-  <Card
-    title="Visibility"
-    icon="eye"
-    href="/agent-ready/visibility"
-  >
-    Show different content to humans and agents reading your docs.
-  </Card>
-  <Card
-    title="Contextual menu"
-    icon="bolt"
-    href="/agent-ready/contextual"
-  >
-    Give readers one-click access to Claude, ChatGPT, Cursor, and more.
-  </Card>
-  <Card
-    title="AI coding tools"
-    icon="wand-magic-sparkles"
-    href="/ai-tools/claude-code"
-  >
-    Set up Claude Code, Cursor, or Windsurf with Mintlify's skill.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+**Stack:**
+- Static site generator: Mintlify
+- Content format: MDX
+- Linter: Vale with custom write-good rules
+- CI: GitHub Actions
