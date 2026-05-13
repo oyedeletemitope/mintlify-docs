@@ -12,9 +12,9 @@
     "light": "#6366F1",
     "dark": "#0F172A"
   },
-  "appearance": {
+  "modeToggle": {
     "default": "dark",
-    "strict": true
+    "isHidden": true
   },
   "navbar": {
     "links": [
@@ -25,33 +25,18 @@
     ]
   },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Get Started",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["index"]
-          }
-        ]
+        "group": "Get Started",
+        "pages": ["index"]
       },
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Tutorials",
-            "pages": ["tutorial-resend"]
-          }
-        ]
+        "group": "Guides",
+        "pages": ["tutorial-resend"]
       },
       {
-        "tab": "Reference",
-        "groups": [
-          {
-            "group": "API",
-            "pages": ["api-reference"]
-          }
-        ]
+        "group": "Reference",
+        "pages": ["api-reference"]
       }
     ]
   },
