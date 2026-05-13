@@ -1,0 +1,335 @@
+---
+title: "API Reference"
+description: "Reference documentation for three GitHub REST API endpoints. API version: 2022-11-28."
+---
+
+## Overview
+
+The GitHub REST API lets you interact with GitHub programmatically. This reference documents three endpoints that cover the most common use cases: retrieving a user profile, listing issues in a repository, and fetching repository metadata.
+
+All endpoints return JSON. All timestamps use ISO 8601 format in UTC.
+
+**Base URL:** `https://api.github.com`
+**API version:** `2022-11-28`
+
+---
+
+## Authentication
+
+All three endpoints work without authentication for public resources.
+
+| Request type | Rate limit |
+|---|---|
+| Unauthenticated | 60 requests per hour per IP address |
+| Authenticated | 5,000 requests per hour |
+
+To authenticate, add an `Authorization` header with a personal access token:
+
+```bash
+Authorization: Bearer YOUR_TOKEN
+```
+
+Generate a personal access token at [github.com/settings/tokens](https://github.com/settings/tokens). For read-only access to public data, select the `public_repo` scope or use a fine-grained token with no additional permissions.
+
+## Required headers
+
+Include these headers on every request:
+
+```
+Accept: application/vnd.github+json
+X-GitHub-Api-Version: 2022-11-28
+```
+
+---
+
+## Endpoint 1: Get a user
+
+Returns publicly available profile information for a GitHub user.
+
+```
+GET https://api.github.com/users/{username}
+```
+
+### Path parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `username` | string | Yes | The GitHub username of the account to retrieve. |
+
+### Example request
+
+```bash
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/users/octocat
+```
+
+### Example response
+
+```json
+{
+  "login": "octocat",
+  "id": 583231,
+  "node_id": "MDQ6VXNlcjU4MzIzMQ==",
+  "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4",
+  "gravatar_id": "",
+  "url": "https://api.github.com/users/octocat",
+  "html_url": "https://github.com/octocat",
+  "type": "User",
+  "user_view_type": "public",
+  "site_admin": false,
+  "name": "The Octocat",
+  "company": "@github",
+  "blog": "https://github.blog",
+  "location": "San Francisco",
+  "email": null,
+  "hireable": null,
+  "bio": null,
+  "twitter_username": null,
+  "public_repos": 8,
+  "public_gists": 8,
+  "followers": 22491,
+  "following": 9,
+  "created_at": "2011-01-25T18:44:36Z",
+  "updated_at": "2026-04-22T11:30:21Z"
+}
+```
+
+### Response fields
+
+| Field | Type | Description |
+|---|---|---|
+| `login` | string | The user's GitHub username. |
+| `id` | integer | The user's unique numeric ID. |
+| `avatar_url` | string | URL of the user's avatar image. |
+| `html_url` | string | URL of the user's GitHub profile page. |
+| `type` | string | Account type. One of: `User`, `Organization`, `Bot`. |
+| `name` | string | The user's display name. Returns `null` if not set. |
+| `public_repos` | integer | Number of public repositories owned by the user. |
+| `followers` | integer | Number of users following this account. |
+| `created_at` | string | ISO 8601 timestamp of when the account was created. |
+
+<Note>
+The response contains additional fields not listed above, including URL fields for related resources such as `followers_url`, `repos_url`, and `events_url`. These follow a consistent pattern and are documented in full at [docs.github.com/en/rest/users/users](https://docs.github.com/en/rest/users/users).
+</Note>
+
+### Error codes
+
+| Code | Status | Description |
+|---|---|---|
+| `200` | OK | The request succeeded. The response body contains the user object. |
+| `404` | Not Found | No user exists with the specified username. Check the spelling of the username. |
+| `403` | Forbidden | You have exceeded the rate limit. Authenticate your request or wait for the limit to reset. The `X-RateLimit-Reset` header contains the reset time as a Unix timestamp. |
+
+---
+
+## Endpoint 2: List repository issues
+
+Returns a paginated list of issues for the specified repository.
+
+<Note>
+GitHub treats every pull request as an issue. Pull requests appear in this response and can be identified by the presence of a `pull_request` key in the object.
+</Note>
+
+```
+GET https://api.github.com/repos/{owner}/{repo}/issues
+```
+
+### Path parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `owner` | string | Yes | The account owner of the repository. This is the username or organization name. |
+| `repo` | string | Yes | The name of the repository. |
+
+### Query parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `state` | string | No | Filter by issue state. One of: `open`, `closed`, `all`. Default: `open`. |
+| `labels` | string | No | Comma-separated list of label names. Returns only issues with all listed labels. |
+| `sort` | string | No | The property to sort by. One of: `created`, `updated`, `comments`. Default: `created`. |
+| `direction` | string | No | Sort direction. One of: `asc`, `desc`. Default: `desc`. |
+| `per_page` | integer | No | Number of results per page. Max 100. Default: 30. |
+| `page` | integer | No | Page number of results to fetch. Default: 1. |
+
+### Example request
+
+```bash
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  "https://api.github.com/repos/octocat/Hello-World/issues?state=open&per_page=2"
+```
+
+### Example response
+
+```json
+[
+  {
+    "url": "https://api.github.com/repos/octocat/Hello-World/issues/9419",
+    "html_url": "https://github.com/octocat/Hello-World/pull/9419",
+    "id": 4353293374,
+    "number": 9419,
+    "title": "Update README",
+    "user": {
+      "login": "sajadavazpwwr",
+      "id": 170822164,
+      "type": "User"
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-04-29T19:55:17Z",
+    "updated_at": "2026-04-29T19:55:17Z",
+    "closed_at": null,
+    "draft": false,
+    "pull_request": {
+      "url": "https://api.github.com/repos/octocat/Hello-World/pulls/9419",
+      "html_url": "https://github.com/octocat/Hello-World/pull/9419",
+      "merged_at": null
+    },
+    "body": null
+  }
+]
+```
+
+### Response fields
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | integer | The unique numeric ID of the issue. |
+| `number` | integer | The issue number within the repository. |
+| `state` | string | The state of the issue. One of: `open`, `closed`. |
+| `title` | string | The title of the issue. |
+| `body` | string | The body text of the issue. Returns `null` if no body was provided. |
+| `user` | object | The user who created the issue. Contains `login` and `id` fields. |
+| `labels` | array | List of label objects applied to the issue. |
+| `comments` | integer | Number of comments on the issue. |
+| `created_at` | string | ISO 8601 timestamp of when the issue was created. |
+| `html_url` | string | URL of the issue on GitHub. |
+| `pull_request` | object | Present only if the issue is a pull request. Contains the pull request URL. |
+
+<Note>
+The response contains additional fields not listed above, including `reactions`, `author_association`, `draft`, `locked`, and several URL fields for related resources. Full field documentation is available at [docs.github.com/en/rest/issues/issues](https://docs.github.com/en/rest/issues/issues).
+</Note>
+
+### Error codes
+
+| Code | Status | Description |
+|---|---|---|
+| `200` | OK | The request succeeded. The response body is an array of issue objects. |
+| `301` | Moved Permanently | The repository has been renamed. Follow the `Location` header to the new URL. |
+| `404` | Not Found | The repository does not exist or you do not have permission to access it. |
+| `422` | Unprocessable Entity | A query parameter value is invalid. Check the `state` and `sort` values. |
+| `403` | Forbidden | You have exceeded the rate limit. |
+
+---
+
+## Endpoint 3: Get a repository
+
+Returns metadata for a single repository, including its description, visibility, default branch, and statistics such as star count and fork count.
+
+```
+GET https://api.github.com/repos/{owner}/{repo}
+```
+
+### Path parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `owner` | string | Yes | The account owner of the repository. This is the username or organization name. |
+| `repo` | string | Yes | The name of the repository. |
+
+### Example request
+
+```bash
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/octocat/Hello-World
+```
+
+### Example response
+
+```json
+{
+  "id": 1296269,
+  "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+  "name": "Hello-World",
+  "full_name": "octocat/Hello-World",
+  "private": false,
+  "owner": {
+    "login": "octocat",
+    "id": 583231,
+    "type": "User",
+    "site_admin": false
+  },
+  "html_url": "https://github.com/octocat/Hello-World",
+  "description": "My first repository on GitHub!",
+  "fork": false,
+  "created_at": "2011-01-26T19:01:12Z",
+  "updated_at": "2026-04-29T18:33:30Z",
+  "pushed_at": "2024-08-20T23:54:42Z",
+  "size": 1,
+  "stargazers_count": 3566,
+  "watchers_count": 3566,
+  "language": null,
+  "has_issues": true,
+  "has_discussions": false,
+  "forks_count": 6057,
+  "archived": false,
+  "disabled": false,
+  "open_issues_count": 5772,
+  "license": null,
+  "visibility": "public",
+  "default_branch": "master",
+  "network_count": 6057,
+  "subscribers_count": 1721
+}
+```
+
+### Response fields
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | integer | The unique numeric ID of the repository. |
+| `name` | string | The name of the repository. |
+| `full_name` | string | The full name in `owner/repo` format. |
+| `private` | boolean | `true` if the repository is private. |
+| `owner` | object | The account that owns the repository. Contains `login`, `id`, `type`, and `site_admin`. |
+| `description` | string | The repository description. Returns `null` if not set. |
+| `fork` | boolean | `true` if the repository is a fork of another repository. |
+| `size` | integer | Repository size in kilobytes. |
+| `stargazers_count` | integer | Number of users who have starred the repository. |
+| `watchers_count` | integer | Number of users watching the repository. Matches `stargazers_count`. |
+| `language` | string | The primary programming language. Returns `null` if no language is detected. |
+| `forks_count` | integer | Number of forks of the repository. |
+| `archived` | boolean | `true` if the repository has been archived and is read-only. |
+| `disabled` | boolean | `true` if the repository has been disabled. |
+| `open_issues_count` | integer | Number of open issues and open pull requests combined. |
+| `license` | object | The repository license. Returns `null` if no license is set. |
+| `visibility` | string | Repository visibility. One of: `public`, `private`, `internal`. |
+| `default_branch` | string | The name of the default branch. |
+| `network_count` | integer | Number of repositories in the network, including forks. |
+| `subscribers_count` | integer | Number of users watching the repository. |
+| `created_at` | string | ISO 8601 timestamp of when the repository was created. |
+| `updated_at` | string | ISO 8601 timestamp of the most recent metadata update. |
+| `pushed_at` | string | ISO 8601 timestamp of the most recent push to the repository. |
+
+<Note>
+The response contains additional fields not listed above. These include approximately 30 URL fields for related resources such as `forks_url`, `commits_url`, and `issues_url`, as well as `git_url`, `ssh_url`, `clone_url`, `topics`, `has_pages`, `has_wiki`, and `allow_forking`. Some fields such as `forks`, `open_issues`, and `watchers` duplicate the values of `forks_count`, `open_issues_count`, and `watchers_count` and are kept for backwards compatibility. Full field documentation is available at [docs.github.com/en/rest/repos/repos](https://docs.github.com/en/rest/repos/repos).
+</Note>
+
+### Error codes
+
+| Code | Status | Description |
+|---|---|---|
+| `200` | OK | The request succeeded. The response body contains the repository object. |
+| `301` | Moved Permanently | The repository has been renamed. Follow the `Location` header to the new URL. |
+| `403` | Forbidden | You do not have permission to access this repository, or you have exceeded the rate limit. |
+| `404` | Not Found | No repository exists with the specified owner and name. |

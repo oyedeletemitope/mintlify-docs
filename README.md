@@ -1,55 +1,69 @@
-# Mintlify Starter Kit
+# Resend Quickstart Docs
 
-Use the starter kit to get your docs deployed and ready to customize.
+A 3-page documentation site built with [Mintlify](https://mintlify.com) for the Documentation Assessment Course, Day 10.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+## Pages
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+| Page | File | Description |
+|---|---|---|
+| Overview | `index.mdx` | Home page, site structure, quick reference table |
+| Tutorial | `tutorial-resend.mdx` | Step-by-step guide to sending email with Resend in Node.js |
+| API Reference | `api-reference.mdx` | Full reference for the Send Email endpoint |
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+## Local preview
 
-## AI-assisted writing
-
-Set up your AI coding tool to work with Mintlify:
+Install the Mintlify CLI and run the local dev server:
 
 ```bash
-npx skills add https://mintlify.com/docs
+npm install -g mintlify
+mintlify dev
 ```
 
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
+The site runs at `http://localhost:3000`.
 
-See the [AI tools guides](/ai-tools) for tool-specific setup.
+## Deploy to Mintlify
 
-## Development
+1. Push this repository to GitHub.
+2. Go to [dashboard.mintlify.com](https://dashboard.mintlify.com) and sign in.
+3. Click **Add new project**.
+4. Connect your GitHub account and select this repository.
+5. Mintlify detects `mint.json` and deploys automatically.
+6. Your live URL will be `https://your-project.mintlify.app`.
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Linting with Vale
+
+This project uses [Vale](https://vale.sh) to lint documentation for hedging language and passive voice.
+
+Install Vale and run it locally:
+
+```bash
+# Install Vale (macOS)
+brew install vale
+
+# Install Vale (Linux)
+snap install vale
+
+# Run the linter
+vale *.mdx
+```
+
+Vale also runs automatically on every push and pull request via GitHub Actions (`.github/workflows/lint.yml`).
+
+## Project structure
 
 ```
-npm i -g mint
+.
++-- mint.json               # Mintlify configuration
++-- index.mdx               # Home / overview page
++-- tutorial-resend.mdx     # Tutorial page
++-- api-reference.mdx       # API reference page
++-- .vale.ini               # Vale linter configuration
++-- .vale/
+|   +-- styles/
+|       +-- write-good/
+|           +-- Hedging.yml       # Flags weak/hedging words
+|           +-- PassiveVoice.yml  # Flags passive voice
++-- .github/
+    +-- workflows/
+        +-- lint.yml        # GitHub Actions Vale workflow
 ```
-
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
-mint dev
-```
-
-View your local preview at `http://localhost:3000`.
-
-## Publishing changes
-
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
